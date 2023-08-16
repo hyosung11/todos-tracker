@@ -44,6 +44,11 @@ app.get("/", (req, res) => {
   });
 });
 
+// Render new todo list page
+app.get("/lists/new", (req, res) => {
+  res.render("new-list");
+});
+
 // Listener
 app.listen(port, host, () => {
   console.log(`Todos Tracker is listening on port ${port} of ${host}.`);
