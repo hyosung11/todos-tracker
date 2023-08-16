@@ -37,11 +37,9 @@ const sortTodoLists = lists => {
   return [].concat(undone, done);
 };
 
-// Render the list of todo lists
+// Redirect start page
 app.get("/", (req, res) => {
-  res.render("lists", {
-    todoLists: sortTodoLists(todoLists),
-  });
+  res.redirect("/lists")
 });
 
 // Render the list of todo lists
