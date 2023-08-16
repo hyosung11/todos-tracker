@@ -59,8 +59,14 @@ app.get("/lists/new", (req, res) => {
 // Create a new todo list
 app.post("/lists", (req, res) => {
   let title = req.body.todoListTitle.trim();
-  todoLists.push(new TodoList(title));
-  res.redirect("/lists");
+  if (title.length === 0) {
+    res.render("new-list", {
+      errorMessage: "Please provide a title.",
+    });
+  } else {
+    todoLists.push(new TodoList(title));
+    res.redirect("/lists");
+  }
 });
 
 // Listener
