@@ -14,29 +14,27 @@ app.set("view engine", "pug");
 app.use(morgan("common"));
 app.use(express.static("public"));
 
+// Compare todo list titles alphabetically
+const compareByTitle = (todoListA, todoListB) => {
+  let titleA = todoListA.title;
+  let titleB = todoListB.title;
+
+  if (titleA < titleB) {
+    return -1;
+  } else if (titleA > titleB) {
+    return 1;
+  } else {
+    return 0;
+  }
+};
+
 // Return the list of todo lists sorted by completion status and title.
 const sortTodoLists = lists => {
-  return lists.slice().sort((todoListA, todoListB) => {
-    let isDoneA = todoListA.isDone();
-    let isDoneB = todoListB.isDone();
-
-    if (!isDoneA && isDoneB) {
-      return -1;
-    } else if (isDoneA && !isDoneB) {
-      return 1;
-    } else {
-      let titleA = todoListA.title;
-      let titleB = todoListB.title;
-
-      if (titleA < titleB) {
-        return -1;
-      } else if (titleA > titleB) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }
-  });
+  let undone = lists.filter(todoList => !todoList.isDone());
+  let done = lists.filter(todoList => todoList.isDone());
+  undone.sort(compareByTitle);
+  done.sort(compareByTitle);
+  return [].concat(undone, done);
 };
 
 // Render the list of todo lists
