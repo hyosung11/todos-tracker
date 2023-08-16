@@ -28,6 +28,13 @@ app.use(session({
 
 app.use(flash());
 
+// Extract session info
+app.use((req, res, next) => {
+  res.locals.flash = req.session.flash;
+  delete req.session.flash;
+  next();
+});
+
 // Compare todo list titles alphabetically (case-insensitive)
 const compareByTitle = (todoListA, todoListB) => {
   let titleA = todoListA.title.toLowerCase();
