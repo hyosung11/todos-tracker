@@ -14,10 +14,10 @@ app.set("view engine", "pug");
 app.use(morgan("common"));
 app.use(express.static("public"));
 
-// Compare todo list titles alphabetically
+// Compare todo list titles alphabetically (case-insensitive)
 const compareByTitle = (todoListA, todoListB) => {
-  let titleA = todoListA.title;
-  let titleB = todoListB.title;
+  let titleA = todoListA.title.toLowerCase();
+  let titleB = todoListB.title.toLowerCase();
 
   if (titleA < titleB) {
     return -1;
