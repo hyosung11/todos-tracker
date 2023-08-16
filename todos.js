@@ -44,6 +44,13 @@ app.get("/", (req, res) => {
   });
 });
 
+// Render the list of todo lists
+app.get("/lists", (req, res) => {
+  res.render("lists", {
+    todoLists: sortTodoLists(todoLists),
+  });
+});
+
 // Render new todo list page
 app.get("/lists/new", (req, res) => {
   res.render("new-list");
