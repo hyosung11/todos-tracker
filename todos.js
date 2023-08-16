@@ -61,7 +61,11 @@ app.post("/lists", (req, res) => {
   let title = req.body.todoListTitle.trim();
   if (title.length === 0) {
     res.render("new-list", {
-      errorMessage: "Please provide a title.",
+      errorMessage: "Please provide a title of at least one character.",
+    });
+  } else if (title.length > 100) {
+    res.render("new-list", {
+      errorMessage: "List title must be between 1 and 100 characters.",
     });
   } else {
     todoLists.push(new TodoList(title));
