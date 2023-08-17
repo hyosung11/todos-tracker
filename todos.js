@@ -36,10 +36,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// Compare todo list titles alphabetically (case-insensitive)
-const compareByTitle = (todoListA, todoListB) => {
-  let titleA = todoListA.title.toLowerCase();
-  let titleB = todoListB.title.toLowerCase();
+/* Find a todo list with the indicated ID. Returns `undefined` if not found. Note that `todoListId` must be numeric. */
+const loadTodoList = todoListId => {
+  return todoLists.find(todoList => todoList.id === todoListId);
+};
+
+// Compare object titles alphabetically (case-insensitive)
+const compareByTitle = (itemA, itemB) => {
+  let titleA = itemA.title.toLowerCase();
+  let titleB = itemB.title.toLowerCase();
 
   if (titleA < titleB) {
     return -1;
@@ -54,6 +59,15 @@ const compareByTitle = (todoListA, todoListB) => {
 const sortTodoLists = lists => {
   let undone = lists.filter(todoList => !todoList.isDone());
   let done = lists.filter(todoList => todoList.isDone());
+  undone.sort(compareByTitle);
+  done.sort(compareByTitle);
+  return [].concat(undone, done);
+};
+
+// Return the list of todos in the todo list sorted by completion status and title.
+const sortTodos = todoList => {
+  let undone = todoList.todos.filter(todo => !todo.isDone());
+  let done = todoList.todos.filter(todo => todo.isDone());
   undone.sort(compareByTitle);
   done.sort(compareByTitle);
   return [].concat(undone, done);
