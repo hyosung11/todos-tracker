@@ -46,9 +46,9 @@ const loadTodoList = todoListId => {
 const loadTodo = (todoListId, todoId) => {
   let todoList = loadTodoList(todoListId);
   if (!todoList) return undefined;
-  
+
   return todoList.todos.find(todo => todo.id === todoId);
-}
+};
 
 // Redirect start page
 app.get("/", (req, res) => {
@@ -113,7 +113,7 @@ app.get("/lists/:todoListId", (req, res, next) => {
 });
 
 // Toggle completion status of a todo.
-app.post("/lists/${todoList.id}/todos/${todo.id}/toggle", (req, res, next) => {
+app.post("/lists/:todoListId/todos/:todoId/toggle", (req, res, next) => {
   let { todoListId, todoId } = { ...req.params };
   let todo = loadTodo(+todoListId, +todoId);
   if (!todo) {
@@ -121,8 +121,8 @@ app.post("/lists/${todoList.id}/todos/${todo.id}/toggle", (req, res, next) => {
   } else {
     let title = todo.title;
     if (todo.isDone()) {
-      todo.markDone();
-      req.flash("success", `"${title} marked as NOT done!`);
+      todo.markUndone();
+      req.flash("success", `"${title}" marked as NOT done!`);
     } else {
       todo.markDone();
       req.flash("success", `"${title}" marked done.`);
