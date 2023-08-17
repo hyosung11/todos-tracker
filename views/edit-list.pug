@@ -3,7 +3,7 @@ extends layout
 block main
   section#todos
     header
-      h2 Editing '#{todoList.title}'
+      h2 Editing "#{todoList.title}"
       ul
         li
           form.delete(action=`/lists/${todoList.id}/destroy` method="post")
