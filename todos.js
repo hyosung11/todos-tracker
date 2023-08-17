@@ -212,6 +212,20 @@ app.get("/lists/:todoListId/edit", (req, res, next) => {
   }
 });
 
+// Delete todo list
+app.post("/lists/:todoListId/destroy", (req, res, next) => {
+  let todoListId = +req.params.todoListId;
+  let index = todoLists.findIndex(todoList => todoList.id === todoListId);
+  if (index === -1) {
+    next(new Error("Not found."));
+  } else {
+    todoLists.splice(index, 1);
+
+    req.flash("success", "Todo list deleted.");
+    res.redirect("/lists");
+  }
+});
+
 // Error handler
 app.use((err, req, res, _next) => {
   console.log(err); // Writes more extensive information to the console log
