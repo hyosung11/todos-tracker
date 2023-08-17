@@ -108,6 +108,24 @@ app.post(
   }
 );
 
+app.get("/lists/:todoListId", (req, res, next) => {
+  let todoListId = req.params.todoListId;
+  let todoList = loadTodoList(+todoListId);
+  if (todoList === undefined) {
+    next(new Error("Not found."));
+  } else {
+    res.render("list", {
+      todoList: todoList,
+      todos: sortTodos(todoList),
+    });
+  }
+});
+
+app.use((err, req, res, _next) => {
+  console.log(err); // Writes more extensive information to the console log
+  res.status(404).send(err.message);
+});
+
 // Listener
 app.listen(port, host, () => {
   console.log(`Todos Tracker is listening on port ${port} of ${host}.`);
