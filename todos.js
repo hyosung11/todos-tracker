@@ -290,17 +290,6 @@ app.post("/lists/:todoListId/edit",
   }
 );
 
-// TEMPORARY CODE: DELETE WHEN DONE
-app.get("/search/:todoListId", (req, res) => {
-  let todoListId = req.params.todoListId;
-  let todoList = res.locals.store.loadTodoList(+todoListId);
-  if (todoList) {
-    res.send(`Found todo list ${todoListId} with title "${todoList.title}"`);
-  } else {
-    res.send(`Did not find todo list ${todoListId}`);
-  }
-});
-
 // Error handler
 app.use((err, req, res, _next) => {
   console.log(err); // Writes more extensive information to the console log
