@@ -46,6 +46,8 @@ app.use(async (req, res, next) => {
   try {
     await res.locals.store.testQuery1();
     await res.locals.store.testQuery2();
+    await res.locals.store.testQuery3("Work Todos");
+    await res.locals.store.testQuery3("No Such Todos");
     res.send("quitting");
   } catch (error) {
     next(error);
