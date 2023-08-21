@@ -41,6 +41,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Temporary test code
+app.use(async (req, res, next) => {
+  try {
+    await res.locals.store.testQuery1();
+    await res.locals.store.testQuery2();
+    res.send("quitting");
+  } catch (error) {
+    next(error);
+  }
+})
 // Extract session info
 app.use((req, res, next) => {
   res.locals.flash = req.session.flash;
