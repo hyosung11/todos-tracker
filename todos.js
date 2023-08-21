@@ -142,23 +142,22 @@ app.get("/lists/:todoListId",
 );
 
 // Toggle completion status of a todo.
-app.post("/lists/:todoListId/todos/:todoId/toggle", (req, res, next) => {
+app.post("/lists/:todoListId/todos/:todoId/toggle",
+  catchError(async (req, res) => {
   let { todoListId, todoId } = { ...req.params };
   let toggled = res.locals.store.toggleDoneTodo(+todoListId, +todoId);
+  if (!toggled) throw new Error("Not found.");
 
-  if (!toggled) {
-    next(new Error("Not found."));
+  let todo = await res.locals.store.loadTodo(+todoListId, +todoId);
+  if (todo.done) {
+    req.flash("success", `"${todo.title}" marked done.`);
   } else {
-    let todo = res.locals.store.loadTodo(+todoListId, +todoId);
-    if (todo.done) {
-      req.flash("success", `"${todo.title}" marked done.`);
-    } else {
-      req.flash("success", `"${todo.title}" marked as NOT done!`);
-    }
+    req.flash("success", `"${todo.title}" marked as NOT done!`);
+  }
 
     res.redirect(`/lists/${todoListId}`);
-  }
-});
+  })
+);
 
 // Delete a todo.
 app.post("/lists/:todoListId/todos/:todoId/destroy", (req, res, next) => {
