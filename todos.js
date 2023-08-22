@@ -272,19 +272,28 @@ app.post("/lists/:todoListId/edit",
       });
     };
 
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      errors.array().forEach(message => req.flash("error", message.msg));
-      await rerenderEditList();
-    } else if (await store.existsTodoListTitle(todoListTitle)) {
-      req.flash("error", "The list title must be unique.");
-      await rerenderEditList();
-    } else {
-      let updated = await store.setTodoListTitle(+todoListId, todoListTitle);
-      if (!updated) throw new Error("Not found.");
-
-      req.flash("success", "Todo list updated.");
-      res.redirect(`/lists/${todoListId}`);
+    try {
+      let errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        errors.array().forEach(message => req.flash("error", message.msg));
+        await rerenderEditList();
+      } else if (await store.existsTodoListTitle(todoListTitle)) {
+        req.flash("error", "The list title must be unique.");
+        await rerenderEditList();
+      } else {
+        let updated = await store.setTodoListTitle(+todoListId, todoListTitle);
+        if (!updated) throw new Error("Not found.");
+  
+        req.flash("success", "Todo list updated.");
+        res.redirect(`/lists/${todoListId}`);
+      }
+    } catch (error) {
+      if (store.isUniqueConstraintViolation(error)) {
+        req.flash("error", "The list title must be unique.");
+        rerenderEditList();
+      } else {
+        throw error;
+      }
     }
   })
 );
