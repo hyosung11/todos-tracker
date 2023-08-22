@@ -141,19 +141,19 @@ app.get("/lists/:todoListId",
   })
 );
 
-// Toggle completion status of a todo.
+// Toggle completion status of a todo
 app.post("/lists/:todoListId/todos/:todoId/toggle",
   catchError(async (req, res) => {
-  let { todoListId, todoId } = { ...req.params };
-  let toggled = res.locals.store.toggleDoneTodo(+todoListId, +todoId);
-  if (!toggled) throw new Error("Not found.");
+    let { todoListId, todoId } = req.params;
+    let toggled = await res.locals.store.toggleDoneTodo(+todoListId, +todoId);
+    if (!toggled) throw new Error("Not found.");
 
-  let todo = await res.locals.store.loadTodo(+todoListId, +todoId);
-  if (todo.done) {
-    req.flash("success", `"${todo.title}" marked done.`);
-  } else {
-    req.flash("success", `"${todo.title}" marked as NOT done!`);
-  }
+    let todo = await res.locals.store.loadTodo(+todoListId, +todoId);
+    if (todo.done) {
+      req.flash("success", `"${todo.title}" marked done.`);
+    } else {
+      req.flash("success", `"${todo.title}" marked as NOT done!`);
+    }
 
     res.redirect(`/lists/${todoListId}`);
   })
@@ -172,15 +172,16 @@ app.post("/lists/:todoListId/todos/:todoId/destroy",
 );
 
 // Mark all todos as done
-app.post("/lists/:todoListId/complete_all", (req, res, next) => {
-  let todoListId = req.params.todoListId;
-  if (!res.locals.store.completeAllTodos(+todoListId)) {
-    next(new Error("Not found."));
-  } else {
+app.post("/lists/:todoListId/complete_all",
+  catchError(async (req, res) => {
+    let todoListId = req.params.todoListId;
+    let completed = await res.locals.store.completeAllTodos(+todoListId);
+    if (!completed) throw new Error("Not found.");
+
     req.flash("success", "All todos have been marked as done.");
     res.redirect(`/lists/${todoListId}`);
-  }
-});
+  })
+);
 
 // Create a new todo and add it to the specified list
 app.post("/lists/:todoListId/todos",
