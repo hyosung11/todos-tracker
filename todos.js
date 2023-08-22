@@ -193,37 +193,34 @@ app.post("/lists/:todoListId/todos",
       .isLength({ max: 100 })
       .withMessage("Todo title must be between 1 and 100 characters."),
   ],
-  (req, res, next) => {
-    let todoListId = req.params.todoListId;
-    let todoList = res.locals.store.loadTodoList(+todoListId);
+  catchError(async (req, res) => {
     let todoTitle = req.body.todoTitle;
-    if (!todoList) {
-      next(new Error("Not found."));
+    let todoListId = req.params.todoListId;
+
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      errors.array().forEach(message => req.flash("error", message.msg));
+
+      let todoList = await res.locals.store.loadTodoList(+todoListId);
+      if (!todoList) throw new Error("Not found.");
+
+      todoList.todos = await res.locals.store.sortedTodos(todoList);
+
+      res.render("list", {
+        todoList,
+        todoTitle,
+        isDoneTodoList: res.locals.store.isDoneTodoList(todoList),
+        hasUndoneTodos: res.locals.store.hasUndoneTodos(todoList),
+        flash: req.flash(),
+      });
     } else {
-      let errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        errors.array().forEach(message => req.flash("error", message.msg));
+      let created = await res.locals.store.createTodo(+todoListId, todoTitle);
+      if (!created) throw new Error("Not found.");
 
-        todoList.todos = res.locals.store.sortedTodos(todoList);
-
-        res.render("list", {
-          todoList,
-          isDoneTodoList: res.locals.store.isDoneTodoList(todoList),
-          hasUndoneTodos: res.locals.store.hasUndoneTodos(todoList),
-          todoTitle,
-          flash: req.flash(),
-        });
-      } else {
-        let created = res.locals.store.createTodo(+todoListId, todoTitle);
-        if (!created) {
-          next(new Error("Not found."));
-        } else {
-          req.flash("success", "The todo has been created.");
-          res.redirect(`/lists/${todoListId}`);
-        }
-      }
+      req.flash("success", "The todo has been created.");
+      res.redirect(`/lists/${todoListId}`);
     }
-  }
+  })
 );
 
 // Render edit todo list form
