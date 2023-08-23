@@ -44,6 +44,8 @@ app.use((req, res, next) => {
 
 // Extract session info
 app.use((req, res, next) => {
+  res.locals.username = req.session.username;
+  res.locals.password = req.session.password;
   res.locals.flash = req.session.flash;
   delete req.session.flash;
   next();
