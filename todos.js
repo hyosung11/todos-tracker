@@ -307,6 +307,26 @@ app.get("/users/signin", (req, res) => {
   });
 });
 
+// Handle Sign In form submission
+app.post("/users/signin", (req, res) => {
+  let username = req.body.username.trim();
+  let password = req.body.password;
+
+  if (username !== "admin" || password !== "secret") {
+    req.flash("error", "Invalid credentials");
+    res.render("signin", {
+      flash: req.flash(),
+      username: req.body.username,
+    });
+  } else {
+    req.session.username = username;
+    req.session.signedIn = true;
+    req.flash("info", "Welcome!");
+    res.redirect("/lists");
+  }
+});
+
+
 // Error handler
 app.use((err, req, res, _next) => {
   console.log(err); // Writes more extensive information to the console log
