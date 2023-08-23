@@ -52,18 +52,17 @@ app.use((req, res, next) => {
 });
 
 /* Find a todo with the indicated ID in the indicated todo list. Returns `undefined` if not found. Note that both `todoListId` and `todoId` must be numeric. */
-const loadTodo = (todoListId, todoId, todoLists) => {
-  let todoList = loadTodoList(todoListId, todoLists);
-  if (!todoList) return undefined;
+// const loadTodo = (todoListId, todoId, todoLists) => {
+//   let todoList = loadTodoList(todoListId, todoLists);
+//   if (!todoList) return undefined;
 
-  return todoList.todos.find(todo => todo.id === todoId);
-};
+//   return todoList.todos.find(todo => todo.id === todoId);
+// };
 
 // Detect unauthorized access to routes.
 const requiresAuthentication = (req, res, next) => {
   if (!res.locals.signedIn) {
-    console.log("Unauthorized");
-    res.status(401).send("Unauthorized");
+    res.redirect(302, "/users/signin");
   } else {
     next();
   }
@@ -143,6 +142,7 @@ app.post("/lists",
 
 // Render individual todo list and its todos
 app.get("/lists/:todoListId",
+  requiresAuthentication,
   catchError(async (req, res) => {
     let todoListId = req.params.todoListId;
     let todoList = await res.locals.store.loadTodoList(+todoListId);
