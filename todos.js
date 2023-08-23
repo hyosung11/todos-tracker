@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 // Extract session info
 app.use((req, res, next) => {
   res.locals.username = req.session.username;
-  res.locals.password = req.session.password;
+  res.locals.signedIn = req.session.signedIn;
   res.locals.flash = req.session.flash;
   delete req.session.flash;
   next();
@@ -74,7 +74,7 @@ app.get("/lists",
       countDoneTodos: todoList.todos.filter(todo => todo.done).length,
       isDone: store.isDoneTodoList(todoList),
     }));
-  
+
     res.render("lists", {
       todoLists,
       todosInfo,
@@ -328,6 +328,12 @@ app.post("/users/signin", (req, res) => {
   }
 });
 
+// Handle Sign Out
+app.post("/users/signout", (req, res) => {
+  delete req.session.username;
+  delete req.session.password;
+  res.redirect("/users/signin");
+});
 
 // Error handler
 app.use((err, req, res, _next) => {
