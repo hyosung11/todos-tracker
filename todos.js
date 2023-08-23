@@ -76,6 +76,7 @@ app.get("/", (req, res) => {
 
 // Render the list of todo lists
 app.get("/lists",
+  requiresAuthentication,
   catchError(async (req, res) => {
     let store = res.locals.store;
     let todoLists = await store.sortedTodoLists();
@@ -369,5 +370,3 @@ app.use((err, req, res, _next) => {
 app.listen(port, host, () => {
   console.log(`Todos Tracker is listening on port ${port} of ${host}.`);
 });
-
-$2b$10$kRM4bFT4MoDZ9eHOCIODTObT9GARfHCY9FMSAs7z04SRtdoYlm7sC
