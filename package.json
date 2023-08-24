@@ -7,8 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
+    "heroku-postbuild": "npm install --production",
     "start": "npx nodemon todos.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +23,10 @@
     "morgan": "^1.10.0",
     "pg": "^8.11.3",
     "pug": "^3.0.2"
+  },
+  "engines": {
+    "node": "20.4.0",
+    "npm": "9.7.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
