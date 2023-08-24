@@ -1,10 +1,5 @@
 # todos-tracker
 
-## Features to Add
-
-1. Ability to edit the name of an already created todo.
-2. Ability to register a new user.
-
 ## Recreate the Database
 
 ```sh
@@ -25,3 +20,13 @@ undefined
 undefined
 > $2b$10$uC3lSZqheRZja2B.jBA8q.2s3hkEviwTuRWdw36tngJBkm1i/Llo6
 ```
+
+## Features to Add
+
+1. Ability to edit the name of an already created todo.
+2. Ability to register a new user.
+
+## Incomplete
+
+1. Prepare the database for deployment to Heroku.
+2. Deploy the application to Heroku.
