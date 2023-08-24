@@ -3,7 +3,7 @@ doctype html
 html(lang="en-US")
 
   head
-    title Todos App
+    title Todo App
     meta(charset="UTF-8")
     link(rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Sans")
     link(rel="stylesheet" href="/stylesheets/whitespace-reset.css")
@@ -12,7 +12,7 @@ html(lang="en-US")
 
   body
     header
-      h1 Todos Tracker
+      h1 Todo Tracker
       block headerLinks
 
     main
@@ -27,13 +27,7 @@ html(lang="en-US")
 
     footer
       block signIn
-        if signedIn
-          form(action="/users/signout", method="post")
-            fieldset.actions
-              p Signed in as #{username}.
-              button Sign Out
-        else
-          form(action="/users/signin", method="get")
-            fieldset.actions
-              p You are not signed in.
-              button Sign In
+        form(action="/users/signout" method="post")
+          fieldset.actions
+            p Signed in as #{username}.
+            button Sign Out
